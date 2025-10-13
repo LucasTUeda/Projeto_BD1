@@ -1,5 +1,3 @@
-CREATE DATABASE sistema_academico;
-
 -- Database: sistema_academico
 -- DROP DATABASE IF EXISTS sistema_academico;
 -- CREATE DATABASE sistema_academico;
