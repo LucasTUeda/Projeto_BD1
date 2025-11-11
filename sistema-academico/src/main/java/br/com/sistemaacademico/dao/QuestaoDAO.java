@@ -3,7 +3,10 @@ package br.com.sistemaacademico.dao;
 import br.com.sistemaacademico.model.Questao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 
 @Repository
@@ -31,6 +34,22 @@ public class QuestaoDAO {
         if (linhasAfetadas > 0) {
             System.out.println("Uma nova questão foi inserida com sucesso!");
         }
+    }
+
+    public List<Questao> buscarTodas(){
+        String sql = "SELECT id_questao, enunciado, tipo, valor_ponto, resposta_correta FROM QUESTAO";
+
+        RowMapper<Questao> rowMapper = (rs, rowNum) -> {
+            Questao questao = new Questao();
+            questao.setIdQuestao(rs.getInt("id_questao"));
+            questao.setEnunciado(rs.getString("enunciado"));
+            questao.setTipo(rs.getString("tipo"));
+            questao.setValorPonto(rs.getDouble("valor_ponto"));
+            questao.setRespostaCorreta(rs.getString("resposta_correta"));
+            return questao;
+        };
+
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
 
