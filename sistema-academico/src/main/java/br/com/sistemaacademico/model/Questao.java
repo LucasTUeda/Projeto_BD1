@@ -8,7 +8,7 @@ public class Questao {
     private double valorPonto;
     private String respostaCorreta;
 
-    // Construto vazio
+    // Construtor vazio
     public Questao(){
     }
 
