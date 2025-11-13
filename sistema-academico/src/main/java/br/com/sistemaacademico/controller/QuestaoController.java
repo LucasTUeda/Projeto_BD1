@@ -36,4 +36,23 @@ public class QuestaoController {
             return null;
         }
     }
+
+    @GetMapping("/{id}")
+    public Questao buscarQuestaoPorId(@PathVariable int id) {
+        // retorna o objeto
+        return questaoDAO.buscarPorId(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void excluirQuestao(@PathVariable int id) {
+        // O @PathVariable pega o valor "{id}" da URL e joga nesta variável 'id'
+        questaoDAO.excluir(id);
+        System.out.println("Questao " + id + " excluída com sucesso");
+    }
+
+    @PutMapping("/{id}")
+    public void atualizarQuestao(@PathVariable int id, @RequestBody Questao questao){
+        questao.setIdQuestao(id);
+        questaoDAO.atualizarQuestao(questao);
+    }
 }

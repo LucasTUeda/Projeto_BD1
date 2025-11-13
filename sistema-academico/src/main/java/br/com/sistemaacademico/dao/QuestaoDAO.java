@@ -18,6 +18,16 @@ public class QuestaoDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private final RowMapper<Questao> rowMapper = (rs, rowNum) -> {
+        Questao questao = new Questao();
+        questao.setIdQuestao(rs.getInt("id_questao"));
+        questao.setEnunciado(rs.getString("enunciado"));
+        questao.setTipo(rs.getString("tipo"));
+        questao.setValorPonto(rs.getDouble("valor_ponto"));
+        questao.setRespostaCorreta(rs.getString("resposta_correta"));
+        return questao;
+    };
+
     public void cadastrarQuestao(Questao questao){
         String sql = "INSERT INTO QUESTAO(id_questao, enunciado, tipo, valor_ponto, resposta_correta) " +
                 "VALUES (?, ?, ?, ?, ?)";
@@ -36,21 +46,41 @@ public class QuestaoDAO {
         }
     }
 
+    // -- (READ ALL) --
     public List<Questao> buscarTodas(){
         String sql = "SELECT id_questao, enunciado, tipo, valor_ponto, resposta_correta FROM QUESTAO";
-
-        RowMapper<Questao> rowMapper = (rs, rowNum) -> {
-            Questao questao = new Questao();
-            questao.setIdQuestao(rs.getInt("id_questao"));
-            questao.setEnunciado(rs.getString("enunciado"));
-            questao.setTipo(rs.getString("tipo"));
-            questao.setValorPonto(rs.getDouble("valor_ponto"));
-            questao.setRespostaCorreta(rs.getString("resposta_correta"));
-            return questao;
-        };
-
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    // -- (READ ONE) --
+    public Questao buscarPorId(int idQuestao){
+        String sql = "SELECT * FROM QUESTAO WHERE id_questao = ?";
+
+        try{
+            return jdbcTemplate.queryForObject(sql, rowMapper, idQuestao);
+        } catch (Exception e){
+            System.err.println("Nenhuma questão encontrada com o ID: " + idQuestao);
+            return null;
+        }
+    }
+
+    public void excluir(int idQuestao){
+        String sql = "DELETE FROM QUESTAO WHERE id_questao = ?";
+
+        jdbcTemplate.update(sql, idQuestao);
+    }
+
+    public void atualizarQuestao(Questao questao){
+        String sql = "UPDATE QUESTAO SET enunciado = ?, tipo = ?, valor_ponto = ?, resposta_correta = ?"
+                + " WHERE id_questao = ?";
+
+        jdbcTemplate.update(sql,
+                questao.getEnunciado(),
+                questao.getTipo(),
+                questao.getValorPonto(),
+                questao.getRespostaCorreta(),
+                questao.getIdQuestao()
+        );
+    }
 
 }
