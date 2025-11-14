@@ -1,4 +1,4 @@
-package br.com.sistemaacademico.model;
+package br.com.sistemaacademico.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

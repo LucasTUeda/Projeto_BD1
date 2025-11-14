@@ -1,6 +1,6 @@
 package br.com.sistemaacademico.controller;
 
-import br.com.sistemaacademico.model.AvaliacaoDTO;
+import br.com.sistemaacademico.dto.AvaliacaoDTO;
 import br.com.sistemaacademico.service.AvaliacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

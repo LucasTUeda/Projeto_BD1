@@ -3,7 +3,7 @@ package br.com.sistemaacademico.service;
 import br.com.sistemaacademico.dao.AvaliacaoDAO;
 import br.com.sistemaacademico.dao.AvaliacaoQuestaoDAO;
 import br.com.sistemaacademico.model.Avaliacao;
-import br.com.sistemaacademico.model.AvaliacaoDTO;
+import br.com.sistemaacademico.dto.AvaliacaoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
