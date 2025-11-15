@@ -29,11 +29,10 @@ public class QuestaoDAO {
     };
 
     public void cadastrarQuestao(Questao questao){
-        String sql = "INSERT INTO QUESTAO(id_questao, enunciado, tipo, valor_ponto, resposta_correta) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO QUESTAO(enunciado, tipo, valor_ponto, resposta_correta) " +
+                "VALUES (?, ?, ?, ?)";
 
         int linhasAfetadas = jdbcTemplate.update(sql,
-                questao.getIdQuestao(),
                 questao.getEnunciado(),
                 questao.getTipo(),
                 questao.getValorPonto(),
