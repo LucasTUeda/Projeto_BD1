@@ -1,12 +1,13 @@
 package br.com.sistemaacademico.controller;
 
 import br.com.sistemaacademico.dto.AvaliacaoDTO;
+import br.com.sistemaacademico.dto.AvaliacaoDetalhadaDTO;
+import br.com.sistemaacademico.model.Avaliacao;
 import br.com.sistemaacademico.service.AvaliacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/avaliacoes")
@@ -23,5 +24,14 @@ public class AvaliacaoController {
         return avaliacaoService.criarNovaAvaliacao(avaliacaoDTO);
     }
 
+    @GetMapping("/aluno/{matricula}")
+    public List<Avaliacao> listarAvaliacoesPendentes(@PathVariable int matricula) {
+        return avaliacaoService.buscarPendentes(matricula);
+    }
+
+    @GetMapping("/{id}")
+    public AvaliacaoDetalhadaDTO buscarAvaliacaoPorId(@PathVariable int id) {
+        return avaliacaoService.buscarDetalhesAvaliacao(id);
+    }
 
 }
