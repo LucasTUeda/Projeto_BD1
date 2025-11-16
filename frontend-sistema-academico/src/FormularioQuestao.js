@@ -92,7 +92,12 @@ function FormularioQuestao({ dadosIniciais, onSave }) {
             
             <div>
                 <label>Valor Ponto:</label>
-                <input type="number" step="0.1" name="valorPonto" value={formData.valorPonto} onChange={handleChange} />
+                <input type="number" 
+                    step="0.1" 
+                    name="valorPonto" 
+                    placeholder="0.0" // 1. Adiciona o texto fantasma
+                    value={formData.valorPonto === 0 ? '' : formData.valorPonto} // 2. Fica vazio se o valor for 0
+                    onChange={handleChange} />
             </div>
 
             <div>
