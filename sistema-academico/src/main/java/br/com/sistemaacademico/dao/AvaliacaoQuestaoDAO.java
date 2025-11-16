@@ -42,4 +42,13 @@ public class AvaliacaoQuestaoDAO {
             }
         });
     }
+
+    public List<Integer> findQuestaoIdsByAvaliacaoId(int idAvaliacao) {
+        String sql = "SELECT id_questao FROM avaliacao_questao WHERE id_avaliacao = ?";
+
+        // Este é um RowMapper simples, só para pegar um inteiro.
+        // (rs, rowNum) -> rs.getInt("id_questao") é o mesmo que:
+        // new RowMapper<Integer>() { ... }
+        return jdbctemplate.query(sql, (rs, rowNum) -> rs.getInt("id_questao"), idAvaliacao);
+    }
 }
