@@ -64,6 +64,7 @@ public class AvaliacaoService {
         for (int idQuestao : idsQuestoes) {
             Questao questao = questaoDAO.buscarPorId(idQuestao); // Usa o DAO que já tínhamos
             if (questao != null) {
+                questao.setRespostaCorreta(null); // SEGURANÇA: Remove a resposta correta antes de enviar para o aluno
                 questoesCompletas.add(questao);
             }
         }
