@@ -8,7 +8,7 @@ import java.util.List;
 public class AvaliacaoDTO {
 
     private String titulo;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone="GMT-3")
     private Date dataFim;
     private int idProfessor;
     private int idDisciplina;
