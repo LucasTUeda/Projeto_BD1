@@ -24,7 +24,7 @@ function ListaAvaliacoesAluno() {
                         <li key={av.idAvaliacao}>
                             <strong>{av.titulo}</strong>
                             <br />
-                            <span>Data Limite: {new Date(av.dataFim).toLocaleDateString()}</span>
+                            <span>Data Limite: {new Date(av.dataFim).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}</span>
                             <br />
                             
                             {/* 2. Transforma o <button> em <Link> */}
