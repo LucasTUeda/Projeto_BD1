@@ -101,7 +101,7 @@ function ResponderAvaliacao() {
             
             <form onSubmit={handleSubmit}>
                 <h2>Respondendo: {avaliacao.titulo}</h2>
-                <p>Data Limite: {new Date(avaliacao.dataFim).toLocaleDateString()}</p>
+                <p>Data Limite: {new Date(avaliacao.dataFim).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}</p>
                 
                 <hr />
 
@@ -139,6 +139,7 @@ function ResponderAvaliacao() {
                                         onChange={(e) => handleRespostaChange(q.idQuestao, e.target.value)} 
                                         required 
                                     /> C
+                                </label>
                                     <label style={{ marginLeft: '10px' }}>
                                     <input 
                                         type="radio" 
@@ -147,6 +148,7 @@ function ResponderAvaliacao() {
                                         onChange={(e) => handleRespostaChange(q.idQuestao, e.target.value)} 
                                         required 
                                     /> D
+                                </label>
                                     <label style={{ marginLeft: '10px' }}>
                                     <input 
                                         type="radio" 
@@ -155,8 +157,6 @@ function ResponderAvaliacao() {
                                         onChange={(e) => handleRespostaChange(q.idQuestao, e.target.value)} 
                                         required 
                                     /> E
-                                </label>
-                                </label>
                                 </label>
                                 {/* Adicionar mais opções conforme necessário */}
                             </div>
