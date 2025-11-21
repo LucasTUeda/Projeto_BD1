@@ -8,6 +8,8 @@ function PaginaProfessor() {
     const [questoes, setQuestoes] = useState([]);
     const [questaoEmEdicao, setQuestaoEmEdicao] = useState(null);
 
+    const [avaliacoes, setAvaliacoes] = useState([]);
+
     const fetchQuestoes = () => {
         fetch('http://localhost:8080/api/questoes/listar') //
             .then(res => res.json())
@@ -15,11 +17,22 @@ function PaginaProfessor() {
             .catch(erro => console.error("Erro ao carregar questões:", erro));
     };
 
-    useEffect(() => { fetchQuestoes(); }, []);
+    const fetchAvaliacoes = () => {
+        fetch('http://localhost:8080/api/avaliacoes/aluno/2025001')
+            .then(res => res.json())
+            .then(dados => setAvaliacoes(dados))
+            .catch(erro => console.error("Erro avaliações:",erro));
+    }
+
+    useEffect(() => { 
+        fetchQuestoes();
+        fetchAvaliacoes();
+     }, []);
 
     const handleSaveOrDelete = () => {
         setQuestaoEmEdicao(null);
         fetchQuestoes();
+        fetchAvaliacoes();
     };
 
     const handleEdit = (questao) => {
@@ -29,7 +42,13 @@ function PaginaProfessor() {
     return (
         <div>
             <h2>Portal do Professor</h2>
-            <FormularioAvaliacao />
+            <FormularioAvaliacao 
+                onDelete={handleSaveOrDelete} 
+                listaDeAvaliacoes={avaliacoes}
+            />
+
+            <hr style={{margin: '20px 0'}}/>
+
             <FormularioQuestao 
                 dadosIniciais={questaoEmEdicao} 
                 onSave={handleSaveOrDelete} 

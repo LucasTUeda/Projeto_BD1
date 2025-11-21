@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function FormularioAvaliacao() {
+function FormularioAvaliacao({onDelete, listaDeAvaliacoes}) {
     
     // --- 1. GERENCIAMENTO DE ESTADO ---
     
@@ -99,8 +99,27 @@ function FormularioAvaliacao() {
                 setFormData({ ...formData, titulo: '', dataFim: '' });
                 setQuestoesSelecionadas([]);
                 setFiltroQuestao('');
+                onDelete();
             } else {
                 alert('Falha ao criar avaliação.');
+            }
+        });
+    };
+
+    const handleExcluir = (idAvaliacao) => {
+        if (!window.confirm("Tem certeza que deseja excluir esta AVALIAÇÃO? Isso apagará as respostas dos alunos!")){
+            return;
+        }
+
+        fetch(`http://localhost:8080/api/avaliacoes/${idAvaliacao}`,{
+            method: 'DELETE'
+        })
+        .then(resposta => {
+            if (resposta.ok) {
+                alert('Avaliação excluída!');
+                onDelete(); // Avisa o App.js para recarregar a lista
+            } else {
+                alert('Falha ao excluir.');
             }
         });
     };
@@ -109,80 +128,113 @@ function FormularioAvaliacao() {
     // --- 4. A RENDERIZAÇÃO (JSX) ---
     
     return (
-        <form onSubmit={handleSubmit} style={{ border: '1px solid #ccc', padding: '10px', margin: '10px 0' }}>
-            <h3>Criar Nova Avaliação</h3>
-            
-            <div>
-                <label>Título: </label>
-                <input type="text" name="titulo" value={formData.titulo} onChange={handleChange} required />
-            </div>
-            <div>
-                <label>Data Limite:</label>
-                <input type="date" name="dataFim" value={formData.dataFim} onChange={handleChange} required />
-            </div>
+        <div style={{ border: '1px solid #ccc', padding: '10px', margin: '10px 0' }}> 
+            <form onSubmit={handleSubmit} >
+                <h3>Criar Nova Avaliação</h3>
+                
+                <div>
+                    <label>Título: </label>
+                    <input type="text" name="titulo" value={formData.titulo} onChange={handleChange} required />
+                </div>
+                <div>
+                    <label>Data Limite:</label>
+                    <input type="date" name="dataFim" value={formData.dataFim} onChange={handleChange} required />
+                </div>
 
-            {/* --- MELHORIA: Dropdowns (Selects) --- */}
-            {/* <div>
-                <label>Professor: </label>
-                <select name="idProfessor" value={formData.idProfessor} onChange={handleChange}>
-                    {professores.map(prof => (
-                        <option key={prof.idProfessor} value={prof.idProfessor}>
-                            {prof.nome} 
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <label>Disciplina: </label>
-                <select name="idDisciplina" value={formData.idDisciplina} onChange={handleChange}>
-                    {disciplinas.map(disc => (
-                        <option key={disc.idDisciplina} value={disc.idDisciplina}>
-                            {disc.nome}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            */}
-            
-            <hr />
-            
-            <h4>Selecione as Questões: </h4>
-            
-            {/* --- Filtro de Busca --- */}
-            <div>
-                <label>Filtrar Questões: </label>
-                <input 
-                    type="text" 
-                    value={filtroQuestao} 
-                    onChange={(e) => setFiltroQuestao(e.target.value)} 
-                    placeholder="Digite o enunciado..."
-                    style={{ width: '80%' }}
-                />
-            </div>
+                {/* --- MELHORIA: Dropdowns (Selects) --- */}
+                {/* <div>
+                    <label>Professor: </label>
+                    <select name="idProfessor" value={formData.idProfessor} onChange={handleChange}>
+                        {professores.map(prof => (
+                            <option key={prof.idProfessor} value={prof.idProfessor}>
+                                {prof.nome} 
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label>Disciplina: </label>
+                    <select name="idDisciplina" value={formData.idDisciplina} onChange={handleChange}>
+                        {disciplinas.map(disc => (
+                            <option key={disc.idDisciplina} value={disc.idDisciplina}>
+                                {disc.nome}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                */}
+                
+                <hr />
+                
+                <h4>Selecione as Questões: </h4>
+                
+                {/* --- Filtro de Busca --- */}
+                <div>
+                    <label>Filtrar Questões: </label>
+                    <input 
+                        type="text" 
+                        value={filtroQuestao} 
+                        onChange={(e) => setFiltroQuestao(e.target.value)} 
+                        placeholder="Digite o enunciado..."
+                        style={{ width: '80%' }}
+                    />
+                </div>
 
-            {/* A Checklist de Questões com Filtro */}
-            <div style={{ maxHeight: '200px', overflowY: 'scroll', border: '1px solid #eee', padding: '5px' }}>
-                {todasQuestoes
-                    .filter(questao => 
-                        // Filtra o enunciado (ignorando maiúsculas/minúsculas)
-                        questao.enunciado.toLowerCase().includes(filtroQuestao.toLowerCase())
-                    )
-                    .map(questao => (
-                        <div key={questao.idQuestao}>
-                            <input
-                                type="checkbox"
-                                value={questao.idQuestao}
-                                onChange={handleChecklistChange}
-                                checked={questoesSelecionadas.includes(questao.idQuestao)}
-                            />
-                            <label> (ID: {questao.idQuestao}) {questao.enunciado}</label>
-                        </div>
-                    ))}
-            </div>
+                {/* A Checklist de Questões com Filtro */}
+                <div style={{ maxHeight: '200px', overflowY: 'scroll', border: '1px solid #eee', padding: '5px' }}>
+                    {todasQuestoes
+                        .filter(questao => 
+                            // Filtra o enunciado (ignorando maiúsculas/minúsculas)
+                            questao.enunciado.toLowerCase().includes(filtroQuestao.toLowerCase())
+                        )
+                        .map(questao => (
+                            <div key={questao.idQuestao}>
+                                <input
+                                    type="checkbox"
+                                    value={questao.idQuestao}
+                                    onChange={handleChecklistChange}
+                                    checked={questoesSelecionadas.includes(questao.idQuestao)}
+                                />
+                                <label> (ID: {questao.idQuestao}) {questao.enunciado}</label>
+                            </div>
+                        ))}
+                </div>
+                <br/>
+                <button type="submit">Salvar Avaliação</button>
+            </form>                        
+                
+                <hr />
+            
 
-            <hr />
-            <button type="submit">Salvar Avaliação</button>
-        </form>
+                <h4>Minha Lista de Avaliações</h4>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                        <tr style={{ background: '#f4f4f4' }}>
+                            <th style={{ padding: '8px', border: '1px solid #ddd' }}>ID</th>
+                            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Título</th>
+                            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Ações</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {/* Lemos a lista das 'props' */}
+                        {listaDeAvaliacoes.map(avaliacao => (
+                            <tr key={avaliacao.idAvaliacao}>
+                                <td style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'center' }}>{avaliacao.idAvaliacao}</td>
+                                <td style={{ padding: '8px', border: '1px solid #ddd' }}>{avaliacao.titulo}</td>
+                                <td style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'center' }}>
+                                    <button onClick={() => handleExcluir(avaliacao.idAvaliacao)} style={{ marginRight: '5px' }}>
+                                        Excluir
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                <hr />
+                
+        </div>                
     );
 }
 
