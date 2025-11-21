@@ -72,5 +72,11 @@ public class AvaliacaoService {
         // 4. Monta e retorna o DTO de resposta
         return new AvaliacaoDetalhadaDTO(avaliacao, questoesCompletas);
     }
+
+    public void excluirAvaliacao(int idAvaliacao){
+        avaliacaoDAO.excluirAvaliacao(idAvaliacao);
+
+
+    }
 }
 

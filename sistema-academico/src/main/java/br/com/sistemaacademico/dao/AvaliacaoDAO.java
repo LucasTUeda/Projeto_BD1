@@ -81,4 +81,10 @@ public class AvaliacaoDAO {
             return null; // Retorna nulo se não encontrar
         }
     }
+
+    public void excluirAvaliacao(int idAvaliacao) {
+        String sql = "DELETE FROM AVALIACAO WHERE id_avaliacao = ?";
+
+        jdbctemplate.update(sql, idAvaliacao);
+    }
 }

@@ -34,4 +34,10 @@ public class AvaliacaoController {
         return avaliacaoService.buscarDetalhesAvaliacao(id);
     }
 
+    @DeleteMapping("/{id}")
+    public void excluirAvaliacaoPorId(@PathVariable int id){
+        avaliacaoService.excluirAvaliacao(id);
+        System.out.println("Avaliação" + id + " excluída com sucesso!");
+    }
+
 }
