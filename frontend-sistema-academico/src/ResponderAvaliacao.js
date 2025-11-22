@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 // 1. Import do 'useParams' para ler a URL
 import { useParams, useNavigate } from 'react-router-dom'; 
 
-function ResponderAvaliacao() {
+function ResponderAvaliacao({aluno}) {
     
     // 2. Use o useParams para ler o ID da URL
     // O nome 'idAvaliacao' deve ser o mesmo da Rota no App.js: "/avaliacao/:idAvaliacao"
@@ -10,9 +10,6 @@ function ResponderAvaliacao() {
     
     // Hook para navegar para outra página após o envio
     const navigate = useNavigate(); 
-
-    // --- IDs "Fixados" para Teste ---
-    const matriculaAlunoLogado = 2025001; // Aluno "Rodrigo Junior"
 
     // --- Estados para os dados ---
     const [avaliacao, setAvaliacao] = useState(null);
@@ -70,7 +67,7 @@ function ResponderAvaliacao() {
         }
 
         // 2. Chamar a API de submissão
-        fetch(`http://localhost:8080/api/respostas/aluno/${matriculaAlunoLogado}/avaliacao/${idAvaliacao}`, {
+        fetch(`http://localhost:8080/api/respostas/aluno/${aluno.id}/avaliacao/${idAvaliacao}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(listaDeRespostasDTO) // Envia o array de DTOs

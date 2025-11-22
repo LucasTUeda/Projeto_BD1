@@ -4,7 +4,7 @@ import FormularioQuestao from './FormularioQuestao';
 import FormularioAvaliacao from './FormularioAvaliacao'; 
 
 // Esta página usa a mesma lógica de "estado elevado" que o App.js usava antes
-function PaginaProfessor() {
+function PaginaProfessor({professor}) {
     const [questoes, setQuestoes] = useState([]);
     const [questaoEmEdicao, setQuestaoEmEdicao] = useState(null);
 
@@ -45,6 +45,7 @@ function PaginaProfessor() {
             <FormularioAvaliacao 
                 onDelete={handleSaveOrDelete} 
                 listaDeAvaliacoes={avaliacoes}
+                idProfessorLogado={professor.id}
             />
 
             <hr style={{margin: '20px 0'}}/>

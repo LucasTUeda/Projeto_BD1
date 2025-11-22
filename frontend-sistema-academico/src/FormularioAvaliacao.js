@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-function FormularioAvaliacao({onDelete, listaDeAvaliacoes}) {
+function FormularioAvaliacao({onDelete, listaDeAvaliacoes, idProfessorLogado}) {
     
     // --- 1. GERENCIAMENTO DE ESTADO ---
     
     const [formData, setFormData] = useState({
         titulo: '',
         dataFim: '',
-        idProfessor: 4, 
+        idProfessor: idProfessorLogado, 
         idDisciplina: 1 
     });
 
@@ -26,6 +26,8 @@ function FormularioAvaliacao({onDelete, listaDeAvaliacoes}) {
     // --- 2. BUSCAR OS DADOS (Questões, Professores, Disciplinas) ---
     useEffect(() => {
         // (Precisará criar estes endpoints no backend)
+
+        setFormData(prev => ({...prev, idProfessor: idProfessorLogado}));
         
         fetch('http://localhost:8080/api/questoes/listar')
             .then(res => res.json())
@@ -46,7 +48,7 @@ function FormularioAvaliacao({onDelete, listaDeAvaliacoes}) {
         //         if (dados.length > 0) setFormData(prev => ({...prev, idDisciplina: dados[0].idDisciplina}));
         //     });
             
-    }, []); // O [] vazio garante que isso rode só uma vez
+    }, [idProfessorLogado]); 
 
     
     // --- 3. LÓGICA DO FORMULÁRIO ---

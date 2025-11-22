@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; // 1. Import do Link
 
-function ListaAvaliacoesAluno() {
+function ListaAvaliacoesAluno( {matricula}) {
     
     const [avaliacoes, setAvaliacoes] = useState([]);
-    const matriculaAlunoLogado = 2025001; 
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/avaliacoes/aluno/${matriculaAlunoLogado}`) 
+        fetch(`http://localhost:8080/api/avaliacoes/aluno/${matricula}`) 
             .then(res => res.json())
             .then(dados => setAvaliacoes(dados));
-    }, [matriculaAlunoLogado]);
+    }, [matricula]);
 
     return (
         <div style={{ border: '1px solid #ccc', padding: '10px', margin: '10px 0' }}>
