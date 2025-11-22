@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/respostas")
+@CrossOrigin("*")
 public class RespostaAlunoController {
     private RespostaAlunoService respostaAlunoService;
 
