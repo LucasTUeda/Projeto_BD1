@@ -1,31 +1,78 @@
-import React from 'react';
+import React, {useState} from 'react';
 // 1. Import dos componentes de rota
-import { Routes, Route, Link } from 'react-router-dom'; 
+import { Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom'; 
 
 // 2. Import dos "componentes-página"
 import PaginaProfessor from './PaginaProfessor';
 import PaginaAluno from './PaginaAluno';
-import ResponderAvaliacao from './ResponderAvaliacao'; //
+import ResponderAvaliacao from './ResponderAvaliacao'; 
+import TelaLogin from './TelaLogin';
 
 function App() {
+  const [usuarioLogado, setUsuarioLogado] = useState(null);
+  const navigate = useNavigate();
+
+  const handleLogin = (usuario) => {
+    setUsuarioLogado(usuario);
+
+    if(usuario.tipo === 'professor'){
+      navigate('/professor');
+    } else {
+      navigate('/');
+    }
+  }
+
+  const handleLogout = () => {
+    setUsuarioLogado(null);
+    navigate('/login');
+  };
+
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', width: '900px', margin: 'auto' }}>
-      <h1>Sistema de Avaliação</h1>
-      
-      {/* 3. Links de navegação */}
-      <nav>
-        <Link to="/">Página do Aluno</Link> | <Link to="/professor">Página do Professor</Link>
-      </nav>
-      
-      <hr />
+      <header style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #eee', paddingBottom: '10px', marginBottom: '20px'}}>
+        <h1>Sistema de Avaliação</h1>
 
-      {/* 4. Componente renderizar para qual URL */}
-      <Routes>
-        <Route path="/" element={<PaginaAluno />} />
-        <Route path="/professor" element={<PaginaProfessor />} />
-        {/* Esta é a rota especial: /avaliacao/ QUALQUER_ID */}
-        <Route path="/avaliacao/:idAvaliacao" element={<ResponderAvaliacao />} />
-      </Routes>
+        {usuarioLogado && (
+          <div>
+            <span>Olá, {usuarioLogado.tipo} <strong>#{usuarioLogado.id}</strong></span>
+            <button onClick={handleLogout} style={{ marginLeft: '10px', background: '#ffdddd', border: '1px solid red' }}>Sair</button>
+          </div>
+        )}
+      </header>
+        
+        {/* Componente renderizar para qual URL */}
+        <Routes>
+          {/*Rota de Login */}
+          <Route path="/login" element={<TelaLogin onLogin={handleLogin}/>} /> 
+          
+          <Route 
+          path="/" 
+          element={
+            usuarioLogado && usuarioLogado.tipo === 'aluno'
+            ? <PaginaAluno aluno={usuarioLogado}/>
+            : <Navigate to="/login"/>
+            } 
+          /> 
+
+          <Route 
+          path="/professor" 
+          element={
+            usuarioLogado && usuarioLogado.tipo === 'professor'
+            ? <PaginaProfessor professor={usuarioLogado}/>
+            : <Navigate to="/login"/>
+            } 
+          /> 
+
+          <Route 
+          path="/avaliacao/:idAvaliacao" 
+          element={
+            usuarioLogado 
+            ? <ResponderAvaliacao aluno={usuarioLogado}/>
+            : <Navigate to="/login"/>
+            } 
+          /> 
+
+        </Routes>
     </div>
   );
 }
