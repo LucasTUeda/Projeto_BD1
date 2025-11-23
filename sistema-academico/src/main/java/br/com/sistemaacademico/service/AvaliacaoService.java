@@ -75,8 +75,10 @@ public class AvaliacaoService {
 
     public void excluirAvaliacao(int idAvaliacao){
         avaliacaoDAO.excluirAvaliacao(idAvaliacao);
+    }
 
-
+    public List<Avaliacao> buscarPorProfessor(int idProfessor){
+        return avaliacaoDAO.buscarPorProfessor(idProfessor);
     }
 }
 

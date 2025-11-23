@@ -2,6 +2,7 @@ package br.com.sistemaacademico.service;
 
 import br.com.sistemaacademico.controller.RespostaAlunoController;
 import br.com.sistemaacademico.dao.RespostaAlunoDAO;
+import br.com.sistemaacademico.dto.CorrecaoDTO;
 import br.com.sistemaacademico.dto.RespostaAlunoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,9 @@ public class RespostaAlunoService {
 
     public void atualizarNotaManual(int numMatricula, int idAvaliacao, int idQuestao, double novaNota){
         respostaAlunoDAO.atualizarNotaManual(numMatricula, idAvaliacao, idQuestao, novaNota);
+    }
+
+    public List<CorrecaoDTO> buscarParaCorrecao(int matricula, int idAvaliacao){
+        return respostaAlunoDAO.buscarRespostasCorrecao(matricula, idAvaliacao);
     }
 }
