@@ -18,16 +18,18 @@ function PaginaProfessor({professor}) {
     };
 
     const fetchAvaliacoes = () => {
-        fetch('http://localhost:8080/api/avaliacoes/aluno/2025001')
+        if(professor && professor.id){
+            fetch(`http://localhost:8080/api/avaliacoes/professor/${professor.id}`)
             .then(res => res.json())
             .then(dados => setAvaliacoes(dados))
-            .catch(erro => console.error("Erro avaliações:",erro));
+            .catch(erro => console.error("Erro avaliações:", erro))
+        }
     }
 
     useEffect(() => { 
         fetchQuestoes();
         fetchAvaliacoes();
-     }, []);
+     }, [professor]);
 
     const handleSaveOrDelete = () => {
         setQuestaoEmEdicao(null);

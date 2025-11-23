@@ -7,6 +7,7 @@ import PaginaProfessor from './PaginaProfessor';
 import PaginaAluno from './PaginaAluno';
 import ResponderAvaliacao from './ResponderAvaliacao'; 
 import TelaLogin from './TelaLogin';
+import TelaCorrecao from './TelaCorrecao';
 
 function App() {
   const [usuarioLogado, setUsuarioLogado] = useState(null);
@@ -71,6 +72,15 @@ function App() {
             : <Navigate to="/login"/>
             } 
           /> 
+
+          <Route
+          path="/professor/corrigir/:idAvaliacao"
+          element={
+            usuarioLogado && usuarioLogado.tipo === 'professor'
+            ? <TelaCorrecao />
+            : <Navigate to="/login" />
+            }
+          />
 
         </Routes>
     </div>

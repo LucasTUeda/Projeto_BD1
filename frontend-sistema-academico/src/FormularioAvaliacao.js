@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {Link} from 'react-router-dom'
 
 function FormularioAvaliacao({onDelete, listaDeAvaliacoes, idProfessorLogado}) {
     
@@ -228,6 +229,10 @@ function FormularioAvaliacao({onDelete, listaDeAvaliacoes, idProfessorLogado}) {
                                     <button onClick={() => handleExcluir(avaliacao.idAvaliacao)} style={{ marginRight: '5px' }}>
                                         Excluir
                                     </button>
+
+                                    <Link to={`/professor/corrigir/${avaliacao.idAvaliacao}`}>
+                                        <button style={{ marginLeft: '5px', background: '#e0f7fa'}}>Corrigir</button>
+                                    </Link>
                                 </td>
                             </tr>
                         ))}
