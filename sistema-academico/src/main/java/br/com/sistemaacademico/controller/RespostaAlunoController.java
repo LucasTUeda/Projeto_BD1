@@ -1,5 +1,6 @@
 package br.com.sistemaacademico.controller;
 
+import br.com.sistemaacademico.dto.CorrecaoDTO;
 import br.com.sistemaacademico.dto.RespostaAlunoDTO;
 import br.com.sistemaacademico.service.RespostaAlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,17 @@ public class RespostaAlunoController {
         respostaAlunoService.submeterRespostas(numMatricula, idAvaliacao, respostas);
     }
 
-    @PutMapping("/corrigir/manual")
+    @PutMapping("/corrigir-manual")
     public void atualizarNota(@RequestParam int matricula,
                               @RequestParam int idAvaliacao,
                               @RequestParam int idQuestao,
                               @RequestParam double nota){
         respostaAlunoService.atualizarNotaManual(matricula, idAvaliacao, idQuestao, nota);
+    }
+
+    @GetMapping("/correcao/aluno/{matricula}/avaliacao/{idAvaliacao}")
+    public List<CorrecaoDTO> buscarParaCorrecao(@PathVariable int matricula,
+                                                @PathVariable int idAvaliacao){
+        return respostaAlunoService.buscarParaCorrecao(matricula, idAvaliacao);
     }
 }

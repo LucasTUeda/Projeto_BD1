@@ -41,4 +41,8 @@ public class AvaliacaoController {
         System.out.println("Avaliação" + id + " excluída com sucesso!");
     }
 
+    @GetMapping("/professor/{idProfessor}")
+    public List<Avaliacao> listarAvaliacoesDoProfessor(@PathVariable int idProfessor){
+        return avaliacaoService.buscarPorProfessor(idProfessor);
+    }
 }
