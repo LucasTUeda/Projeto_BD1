@@ -1,5 +1,6 @@
 package br.com.sistemaacademico.dao;
 
+import br.com.sistemaacademico.dto.CorrecaoDTO;
 import br.com.sistemaacademico.dto.RespostaAlunoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -65,5 +66,21 @@ public class RespostaAlunoDAO {
                 " WHERE num_matricula = ? AND id_avaliacao = ? AND id_questao = ?";
 
         jdbcTemplate.update(sql, novaNota, numMatricula, idAvaliacao, idQuestao);
+    }
+
+    public List<CorrecaoDTO> buscarRespostasCorrecao (int matricula, int idAvaliacao){
+        String sql = "SELECT q.id_questao, q.enunciado, ra.texto_resposta, q.resposta_correta, q.valor_ponto, ra.nota_obtida" +
+                " FROM RESPOSTA_ALUNO ra" +
+                " JOIN QUESTAO q ON ra.id_questao = q.id_questao" +
+                " WHERE ra.num_matricula = ? AND ra.id_avaliacao = ?";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new CorrecaoDTO(
+                rs.getInt("id_questao"),
+                rs.getString("enunciado"),
+                rs.getString("texto_resposta"),
+                rs.getString("resposta_correta"),
+                rs.getDouble("valor_ponto"),
+                (Double) rs.getObject("nota_obtida")
+        ), matricula, idAvaliacao);
     }
 }

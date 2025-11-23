@@ -87,4 +87,9 @@ public class AvaliacaoDAO {
 
         jdbctemplate.update(sql, idAvaliacao);
     }
+
+    public List<Avaliacao> buscarPorProfessor(int idProfessor){
+        String sql = "SELECT * FROM AVALIACAO WHERE id_professor = ?";
+        return jdbctemplate.query(sql, avaliacaoRowMapper, idProfessor);
+    }
 }
