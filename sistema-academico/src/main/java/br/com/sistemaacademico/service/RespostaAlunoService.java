@@ -20,6 +20,16 @@ public class RespostaAlunoService {
 
     @Transactional
     public void submeterRespostas(int numMatricula, int idAvaliacao, List<RespostaAlunoDTO> respostas){
+        // Salva a resposta
         respostaAlunoDAO.salvarResposta(numMatricula, idAvaliacao, respostas);
+
+        // Roda a correção automática imediatamente após salvar
+        respostaAlunoDAO.calcularNotasAutomaticas(numMatricula, idAvaliacao);
+
+        System.out.println("Respostas salvas e notas de múltipla escolha calculadas para matrícula: " + numMatricula);
+    }
+
+    public void atualizarNotaManual(int numMatricula, int idAvaliacao, int idQuestao, double novaNota){
+        respostaAlunoDAO.atualizarNotaManual(numMatricula, idAvaliacao, idQuestao, novaNota);
     }
 }

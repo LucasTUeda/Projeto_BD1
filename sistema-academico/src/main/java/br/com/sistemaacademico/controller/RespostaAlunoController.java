@@ -23,4 +23,12 @@ public class RespostaAlunoController {
         // O Controller chama o Service com todos os dados coletados
         respostaAlunoService.submeterRespostas(numMatricula, idAvaliacao, respostas);
     }
+
+    @PutMapping("/corrigir/manual")
+    public void atualizarNota(@RequestParam int matricula,
+                              @RequestParam int idAvaliacao,
+                              @RequestParam int idQuestao,
+                              @RequestParam double nota){
+        respostaAlunoService.atualizarNotaManual(matricula, idAvaliacao, idQuestao, nota);
+    }
 }

@@ -43,4 +43,27 @@ public class RespostaAlunoDAO {
             }
         });
     }
+
+    public void calcularNotasAutomaticas(int numMatricula, int idAvaliacao) {
+        String sql = "UPDATE RESPOSTA_ALUNO ra" +
+                " SET nota_obtida" +
+                " = CASE" +
+                "   WHEN ra.texto_resposta = UPPER(TRIM(q.resposta_correta)) THEN q.valor_ponto" +
+                "   ELSE 0.0" +
+                " END" +
+                " FROM QUESTAO q" +
+                " WHERE ra.id_questao = q.id_questao" +
+                " AND ra.num_matricula = ?" +
+                " AND ra.id_avaliacao = ?" +
+                " AND q.tipo = 'alternativa'"; // Ignora dissertativas (deixa NULL para o professor corrigir)
+
+        jdbcTemplate.update(sql, numMatricula, idAvaliacao);
+    }
+
+    public void atualizarNotaManual(int numMatricula, int idAvaliacao, int idQuestao, double novaNota){
+        String sql = "UPDATE RESPOSTA_ALUNO SET nota_obtida = ?" +
+                " WHERE num_matricula = ? AND id_avaliacao = ? AND id_questao = ?";
+
+        jdbcTemplate.update(sql, novaNota, numMatricula, idAvaliacao, idQuestao);
+    }
 }
