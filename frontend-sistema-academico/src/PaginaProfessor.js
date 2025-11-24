@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ListaDeQuestoes from './ListaDeQuestoes'; 
 import FormularioQuestao from './FormularioQuestao'; 
 import FormularioAvaliacao from './FormularioAvaliacao'; 
+import { Link } from 'react-router-dom';
 
 // Esta página usa a mesma lógica de "estado elevado" que o App.js usava antes
 function PaginaProfessor({professor}) {
@@ -61,6 +62,12 @@ function PaginaProfessor({professor}) {
                 onDelete={handleSaveOrDelete} 
                 onEdit={handleEdit} 
             />
+
+            <Link to="/professor/relatorios">
+                <button>
+                    Ver Relatórios e Ranking 📊
+                </button>
+            </Link>
         </div>
     );
 }
