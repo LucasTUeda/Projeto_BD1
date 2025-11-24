@@ -8,6 +8,7 @@ import PaginaAluno from './PaginaAluno';
 import ResponderAvaliacao from './ResponderAvaliacao'; 
 import TelaLogin from './TelaLogin';
 import TelaCorrecao from './TelaCorrecao';
+import TelaRelatorios from './TelaRelatorios';
 
 function App() {
   const [usuarioLogado, setUsuarioLogado] = useState(null);
@@ -78,6 +79,15 @@ function App() {
           element={
             usuarioLogado && usuarioLogado.tipo === 'professor'
             ? <TelaCorrecao />
+            : <Navigate to="/login" />
+            }
+          />
+
+          <Route
+          path="/professor/relatorios"
+          element={
+            usuarioLogado && usuarioLogado.tipo === 'professor'
+            ? <TelaRelatorios />
             : <Navigate to="/login" />
             }
           />
