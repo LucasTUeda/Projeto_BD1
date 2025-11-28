@@ -78,7 +78,7 @@ function TelaRelatorios(){
         }
 
     return (
-        <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
+        <div style={{ padding: '20px', maxWidth: '900px', margin: 'auto' }}>
             <h2>📊 Relatórios de Desempenho</h2>
 
             {/* ----- RELATORIO - RANKING -------*/}  
@@ -115,31 +115,31 @@ function TelaRelatorios(){
             </div>
 
             {/* ----- RELATORIO - DESEMPENHO -------*/}  
-            <div>
+            <div style={{ marginTop: '30px', border: '1px solid #ccc', padding: '20px', borderRadius: '8px', background: '#f8f9fa' }}>
                 <h3>📈 Análise de desempenho (comparativo)</h3>
                 <p>Compare a média de um aluno com a média geral da turma</p>
 
-                <form onSubmit={buscarDesempenho}>
+                <form onSubmit={buscarDesempenho} style={{ marginBottom: '15px' }}>
                     <input
                         type="number"
                         placeholder="Matrícula do aluno (ex: 2025001)"
                         value={matriculaAnalise}
                         onChange={e => setMatriculaAnalise(e.target.value)}
                     />
-                    <button type="submit">Comparar</button>
+                    <button type="submit" >Comparar</button>
                 </form>
 
                 {desempenho && (
-                    <div>
+                    <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
                         {/* Card do Aluno */}
-                        <div>
+                        <div >
                             <h4>Média do Aluno</h4>
                             <h1>{desempenho.mediaAluno ? desempenho.mediaAluno.toFixed(1) : '-'}</h1>
                             <small>Em todas as provas</small>
                         </div>
 
                         {/* Card da Turma */}
-                        <div>
+                        <div >
                             <h4>Média da Turma</h4>
                             <h1>{desempenho.mediaTurma ? desempenho.mediaTurma.toFixed(1) : '-'}</h1>
                             <small>Média geral da disciplina</small>
