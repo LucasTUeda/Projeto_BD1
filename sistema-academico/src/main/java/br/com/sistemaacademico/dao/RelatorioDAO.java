@@ -1,6 +1,7 @@
 package br.com.sistemaacademico.dao;
 
 import br.com.sistemaacademico.dto.DesempenhoDTO;
+import br.com.sistemaacademico.dto.EvolucaoDTO;
 import br.com.sistemaacademico.dto.QuestaoAnaliseDTO;
 import br.com.sistemaacademico.dto.RankingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,4 +99,42 @@ public class RelatorioDAO {
             rs.getString("nivel_dificuldade")
         ),idDisciplina);
     }
+
+    public List<EvolucaoDTO> gerarEvolucaoTemporal(int matricula, int idDisciplina){
+        String sql = "SELECT " +
+                "   av.titulo, " +
+                "   av.data_fim," +
+                "   SUM(ra.nota_obtida) as nota_atual, " +
+                "   LAG(SUM(ra.nota_obtida)) OVER (ORDER BY av.data_fim ASC) as nota_anterior " +
+                " FROM RESPOSTA_ALUNO ra " +
+                " JOIN AVALIACAO av ON ra.id_avaliacao = av.id_avaliacao  " +
+                " WHERE ra.num_matricula = ? AND av.id_disciplina = ? " +
+                " GROUP BY av.id_avaliacao, av.titulo, av.data_fim " +
+                " ORDER BY av.data_fim ASC";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+           double notaAtual = rs.getDouble("nota_atual");
+           // getObject verifica se é null (primeira prova não tem anterior)
+            double tempAnterior = rs.getDouble("nota_anterior");
+           Double notaAnterior = rs.wasNull() ? null : tempAnterior;
+           String tendencia;
+
+           if (notaAnterior == null) {
+               tendencia = "Primeira Prova";
+           } else if (notaAtual > notaAnterior) {
+               tendencia = "Subindo";
+           } else if (notaAtual < notaAnterior) {
+               tendencia = "Caindo";
+           } else {
+               tendencia = "Estável";
+           }
+           return new EvolucaoDTO(
+                   rs.getString("titulo"),
+                   rs.getDate("data_fim"),
+                   notaAtual,
+                   tendencia
+           );
+        },matricula, idDisciplina);
+    }
+
 }

@@ -2,6 +2,7 @@ package br.com.sistemaacademico.controller;
 
 import br.com.sistemaacademico.dao.RelatorioDAO;
 import br.com.sistemaacademico.dto.DesempenhoDTO;
+import br.com.sistemaacademico.dto.EvolucaoDTO;
 import br.com.sistemaacademico.dto.QuestaoAnaliseDTO;
 import br.com.sistemaacademico.dto.RankingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,11 @@ public class RelatorioController {
     @GetMapping("/questoes/disciplina/{idDisciplina}")
     public List<QuestaoAnaliseDTO> getAnaliseQuestoes(@PathVariable int idDisciplina){
         return relatorioDAO.gerarAnaliseQuestoes(idDisciplina);
+    }
+
+    @GetMapping("/evolucao/disciplina/{idDisciplina}/aluno/{matricula}")
+    public List<EvolucaoDTO> getEvolucao(@PathVariable int idDisciplina,
+                                         @PathVariable int matricula){
+        return relatorioDAO.gerarEvolucaoTemporal(matricula, idDisciplina);
     }
 }
