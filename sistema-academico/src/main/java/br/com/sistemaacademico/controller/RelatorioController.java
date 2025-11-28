@@ -2,6 +2,7 @@ package br.com.sistemaacademico.controller;
 
 import br.com.sistemaacademico.dao.RelatorioDAO;
 import br.com.sistemaacademico.dto.DesempenhoDTO;
+import br.com.sistemaacademico.dto.QuestaoAnaliseDTO;
 import br.com.sistemaacademico.dto.RankingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,4 +31,8 @@ public class RelatorioController {
         return relatorioDAO.obterDesempenhoComparativo(idDisciplina, matricula);
     }
 
+    @GetMapping("/questoes/disciplina/{idDisciplina}")
+    public List<QuestaoAnaliseDTO> getAnaliseQuestoes(@PathVariable int idDisciplina){
+        return relatorioDAO.gerarAnaliseQuestoes(idDisciplina);
+    }
 }

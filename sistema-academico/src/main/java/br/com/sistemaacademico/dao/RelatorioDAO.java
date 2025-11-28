@@ -1,6 +1,7 @@
 package br.com.sistemaacademico.dao;
 
 import br.com.sistemaacademico.dto.DesempenhoDTO;
+import br.com.sistemaacademico.dto.QuestaoAnaliseDTO;
 import br.com.sistemaacademico.dto.RankingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -70,5 +71,31 @@ public class RelatorioDAO {
                 rs.getDouble("media_aluno"),
                 rs.getDouble("media_turma")
         ), idDisciplina, matricula, idDisciplina);
+    }
+
+    public List<QuestaoAnaliseDTO> gerarAnaliseQuestoes(int idDisciplina){
+        String sql = "SELECT " +
+                " q.enunciado, " +
+                "   COUNT(ra.num_matricula) AS total_respostas, " +
+                "   (SUM(CASE WHEN ra.nota_obtida > 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(ra.num_matricula)) AS taxa_acerto, " +
+                "   CASE " +
+                "       WHEN (SUM(CASE WHEN ra.nota_obtida > 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(ra.num_matricula)) >= 70 THEN 'Fácil' " +
+                "       WHEN (SUM(CASE WHEN ra.nota_obtida > 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(ra.num_matricula)) < 30 THEN 'Difícil' " +
+                "       ELSE 'Média' " +
+                "   END AS nivel_dificuldade " +
+                "FROM QUESTAO q " +
+                "JOIN RESPOSTA_ALUNO ra ON q.id_questao = ra.id_questao " +
+                "JOIN AVALIACAO av ON ra.id_avaliacao = av.id_avaliacao " +
+                "WHERE av.id_disciplina = ? " +
+                "GROUP BY q.id_questao, q.enunciado " +
+                "HAVING COUNT(ra.num_matricula) > 0 " + // Só mostra questões que tiveram resposta
+                "ORDER BY taxa_acerto ASC"; // Mostra as mais difíceis primeiro
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new QuestaoAnaliseDTO(
+            rs.getString("enunciado"),
+            rs.getInt("total_respostas"),
+            rs.getDouble("taxa_acerto"),
+            rs.getString("nivel_dificuldade")
+        ),idDisciplina);
     }
 }
