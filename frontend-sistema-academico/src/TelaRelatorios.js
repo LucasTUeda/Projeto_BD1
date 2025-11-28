@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function TelaRelatorios(){
 
@@ -13,6 +13,9 @@ function TelaRelatorios(){
 
     // ESTADO DE ANALISE QUESTÕES
     const [analiseQuestoes, setAnaliseQuestoes] = useState([]);
+
+    // ESTADO DE EVOLUÇÃO
+    const [evolucao, setEvolucao] = useState([]);
 
     useEffect(() => {
         carregarRanking();
@@ -34,6 +37,8 @@ function TelaRelatorios(){
             .then(res => res.json())
             .then(dados => setDesempenho(dados))
             .catch(err => alert("Erro ao buscar desempenho. Verifique a matricula"));
+
+            buscarEvolucao(matriculaAnalise);
     };
 
     const carregarAnaliseQuestoes = () => {
@@ -52,6 +57,25 @@ function TelaRelatorios(){
                 setAnaliseQuestoes([]);
             }); 
     }
+
+    const buscarEvolucao = (matricula) => {
+        const url = `http://localhost:8080/api/relatorios/evolucao/disciplina/${idDisciplina}/aluno/${matricula}`;
+        console.log("Buscando evolução em:", url);
+
+        fetch(url)
+            .then(res => res.json())
+            .then(dados => {
+                console.log("Dados da Evolução:", dados);
+                if(Array.isArray(dados)) 
+                    setEvolucao(dados);
+                else
+                    setEvolucao([]);
+            })
+            .catch(err => {
+                console.error("Erro na evolução", err);
+                setEvolucao([]);
+            });
+        }
 
     return (
         <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
@@ -122,6 +146,44 @@ function TelaRelatorios(){
                         </div>
                     </div>
                 )}
+
+                
+            {/* --- RELATÓRIO: EVOLUÇÃO TEMPORAL --- */}
+            {evolucao.length > 0 && (
+                <div style={{ marginTop: '30px', border: '1px solid #ccc', padding: '20px', borderRadius: '10px' }}>
+                    <h3>📈 Evolução do Aluno no Tempo</h3>
+                    <p>Histórico de notas e tendência.</p>
+                    
+                    <div style={{ height: '300px' }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <LineChart data={evolucao}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="tituloAvaliacao" />
+                                <YAxis domain={[0, 10]} /> {/* Notas de 0 a 10 */}
+                                <Tooltip />
+                                <Legend />
+                                <Line type="monotone" dataKey="nota" stroke="#8884d8" strokeWidth={3} name="Nota Obtida" />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </div>
+
+                    {/* Tabela de Tendência */}
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px', overflowX: 'auto' }}>
+                        {evolucao.map((ev, i) => (
+                            <div key={i} style={{ 
+                                padding: '10px', minWidth: '120px', textAlign: 'center', borderRadius: '8px',
+                                background: ev.tendencia.includes('Subindo') ? '#d4edda' : (ev.tendencia.includes('Caindo') ? '#f8d7da' : '#eee'),
+                                border: '1px solid #ddd'
+                            }}>
+                                <strong>{ev.tituloAvaliacao}</strong><br/>
+                                <span>{ev.nota} pts</span><br/>
+                                <small>{ev.tendencia}</small>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             </div>
 
             {/* ----- RELATORIO - ANÁLISE DE QUESTÕES -------*/}  
@@ -147,7 +209,7 @@ function TelaRelatorios(){
                                 <Bar dataKey="taxaAcerto" name="Taxa de Acerto (%)" fill="#8884d8">
                                     {/* Lógica para pintar a barra condicionalmente */}
                                     {analiseQuestoes.map((entry, index) => (
-                                        <cell key={`cell-${index}`} fill={entry.taxaAcerto > 70 ? '#28a745' : (entry.taxaAcerto < 30 ? '#dc3545' : '#ffc107')} />
+                                        <Cell key={`cell-${index}`} fill={entry.taxaAcerto > 70 ? '#28a745' : (entry.taxaAcerto < 30 ? '#dc3545' : '#ffc107')} />
                                     ))}
                                 </Bar>
                             </BarChart>
