@@ -68,19 +68,30 @@ public class RespostaAlunoDAO {
         jdbcTemplate.update(sql, novaNota, numMatricula, idAvaliacao, idQuestao);
     }
 
-    public List<CorrecaoDTO> buscarRespostasCorrecao (int matricula, int idAvaliacao){
+    public List<CorrecaoDTO> buscarRespostasCorrecao (int matricula, int idAvaliacao) {
         String sql = "SELECT q.id_questao, q.enunciado, ra.texto_resposta, q.resposta_correta, q.valor_ponto, ra.nota_obtida" +
                 " FROM RESPOSTA_ALUNO ra" +
                 " JOIN QUESTAO q ON ra.id_questao = q.id_questao" +
                 " WHERE ra.num_matricula = ? AND ra.id_avaliacao = ?";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new CorrecaoDTO(
-                rs.getInt("id_questao"),
-                rs.getString("enunciado"),
-                rs.getString("texto_resposta"),
-                rs.getString("resposta_correta"),
-                rs.getDouble("valor_ponto"),
-                (Double) rs.getObject("nota_obtida")
-        ), matricula, idAvaliacao);
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+
+            // --- CORREÇÃO DO ERRO DE CAST ---
+            // 1. Lê como double primitivo (o driver converte BigDecimal -> double automaticamente)
+            double valorTemp = rs.getDouble("nota_obtida");
+
+            // 2. Verifica se no banco estava NULL (para não transformar null em 0.0 sem querer)
+            Double notaFinal = rs.wasNull() ? null : valorTemp;
+            // --------------------------------
+
+            return new CorrecaoDTO(
+                    rs.getInt("id_questao"),
+                    rs.getString("enunciado"),
+                    rs.getString("texto_resposta"),
+                    rs.getString("resposta_correta"),
+                    rs.getDouble("valor_ponto"),
+                    notaFinal // Passamos a variável segura
+            );
+        }, matricula, idAvaliacao);
     }
 }
