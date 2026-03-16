@@ -41,6 +41,6 @@ O projeto adota uma arquitetura full-stack dividida em frontend, backend e base 
 3. Inicie o servidor de desenvolvimento: `npm start`.
 4. A aplicação abrirá automaticamente no navegador no endereço `http://localhost:3000`.
 
-## ⚠️ Notas de Desenvolvimento
+## Notas de Desenvolvimento
 
 * **Autenticação**: Atualmente, o sistema possui um login simulado para fins de teste no frontend. Pode aceder como Professor utilizando o ID `4` ou como Aluno utilizando a Matrícula `2025001`. Numa futura atualização, será implementada a validação real com o backend e o banco de dados.
